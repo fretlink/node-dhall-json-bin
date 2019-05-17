@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { https } = require("follow-redirects");
+const semver = require("semver");
 const tar = require("tar");
 const unbz2 = require("unbzip2-stream");
 const unzipper = require("unzipper");
@@ -18,6 +19,9 @@ if (!dhallVersion) throw new Error("Missing DHALL_VERSION environment variable."
 
 const dhallJsonVersion = trim(pkg["dhall-json-version"] || process.env.DHALL_JSON_VERSION);
 if (!dhallJsonVersion) throw new Error("Missing DHALL_JSON_VERSION environment variable.");
+if (semver.valid(dhallJsonVersion) && semver.lt(dhallJsonVersion, "1.2.8")) {
+  throw new Error(`This release of the \`${pkg.name}\` npm package installs \`json-to-dhall\`, which isn’t provided by \`dhall-json@<1.2.8\`.`);
+}
 
 const release = `https://github.com/dhall-lang/dhall-haskell/releases/download/${dhallVersion}/dhall-json-${dhallJsonVersion}`;
 
