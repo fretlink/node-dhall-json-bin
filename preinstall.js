@@ -11,13 +11,53 @@ const unzipper = require("unzipper");
 const pkg = require("./package.json");
 const bindir = path.join(__dirname, "bin");
 
-const trim = str => str && String(str).trim();
+const formatVersionKey = name =>
+  `${name}-version`;
+const toSnakeCase = name =>
+  name.replace(/-/g, '_');
+const formatNpmCfgVar = name =>
+  toSnakeCase(name.toLowerCase());
+const formatEnvVar = name =>
+  toSnakeCase(name.toUpperCase());
+const prefixNpmCfgKey = key =>
+  `${pkg.name}:${key}`;
 
-const dhallVersion = trim(pkg["dhall-version"] || process.env.DHALL_VERSION);
-if (!dhallVersion) throw new Error("Missing DHALL_VERSION environment variable.");
+const readVersionWith = (lookup, discard = () => {}) => name => {
+  const key = formatVersionKey(name);
+  const version = lookup(key);
+  return version ? {
+    get version() { return String(version).trim() },
+    discard() { discard(key, version) },
+    orElse(alt) { alt.discard(); return this }
+  } : {
+    get version() {
+      throw new Error(`Missing \`${name}\` version! You can provide it as a \`${prefixNpmCfgKey(key)}\` npm configuration parameter or as a \`${formatEnvVar(key)}\` environment variable.`);
+    },
+    discard() {},
+    orElse(alt) { return alt }
+  };
+};
 
-const dhallJsonVersion = trim(pkg["dhall-json-version"] || process.env.DHALL_JSON_VERSION);
-if (!dhallJsonVersion) throw new Error("Missing DHALL_JSON_VERSION environment variable.");
+const readPkgVersion = readVersionWith(key => pkg[key]);
+const readCfgVersion = readVersionWith(key => {
+  return process.env[`npm_config_${formatNpmCfgVar(pkg.name)}_${formatNpmCfgVar(key)}`];
+}, (key, version) => {
+  console.warn(`Ignoring \`${prefixNpmCfgKey(key)}\` npm configuration parameter (${version}).`);
+});
+const readEnvVersion = readVersionWith(key => {
+  return process.env[formatEnvVar(key)];
+}, (key, version) => {
+  console.warn(`Ignoring \`${formatEnvVar(key)}\` environment variable (${version}).`);
+});
+
+const readVersion = name =>
+  readPkgVersion(name)
+    .orElse(readEnvVersion(name))
+    .orElse(readCfgVersion(name))
+    .version;
+
+const dhallVersion = readVersion("dhall");
+const dhallJsonVersion = readVersion("dhall-json");
 
 const release = `https://github.com/dhall-lang/dhall-haskell/releases/download/${dhallVersion}/dhall-json-${dhallJsonVersion}`;
 
