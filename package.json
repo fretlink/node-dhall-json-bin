@@ -21,13 +21,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fretlink/node-dhall-json.git"
+    "url": "git+https://github.com/fretlink/node-dhall-json-bin.git"
   },
   "author": "FretLink",
   "bugs": {
-    "url": "https://github.com/fretlink/node-dhall-json/issues"
+    "url": "https://github.com/fretlink/node-dhall-json-bin/issues"
   },
-  "homepage": "https://github.com/fretlink/node-dhall-json#readme",
+  "homepage": "https://github.com/fretlink/node-dhall-json-bin#readme",
   "dependencies": {
     "follow-redirects": "^1.7.0",
     "tar": "^4.4.8",
