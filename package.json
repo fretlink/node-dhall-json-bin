@@ -15,7 +15,8 @@
   "bin": {
     "dhall-to-json": "bin/dhall-to-json.exe",
     "dhall-to-yaml": "bin/dhall-to-yaml.exe",
-    "json-to-dhall": "bin/json-to-dhall.exe"
+    "json-to-dhall": "bin/json-to-dhall.exe",
+    "yaml-to-dhall": "bin/yaml-to-dhall.exe"
   },
   "scripts": {
     "preinstall": "node ./preinstall.js"
