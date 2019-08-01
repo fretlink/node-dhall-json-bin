@@ -3,6 +3,7 @@
   "version": "1.0.1",
   "description": "NPM package for `dhall-json`, based on https://github.com/justinwoo/npm-psc-package-bin-simple.",
   "os": [
+    "darwin",
     "linux",
     "win32"
   ],
