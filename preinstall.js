@@ -85,7 +85,13 @@ if (process.platform === "win32") {
     res.pipe(unzipper.Extract({ path: bindir }))
   );
 } else {
-  get("x86_64-linux.tar.bz2", res =>
+  const isDarwin = process.platform === 'darwin';
+
+  if (isDarwin && isLowerThan(dhallJsonVersion, "1.4.0")) {
+    throw new Error(`Static macOS binaries aren’t provided by \`dhall-json@<1.4.0\`.`);
+  }
+
+  get(`x86_64-${isDarwin ? 'macos' : 'linux'}.tar.bz2`, res =>
     res.pipe(unbz2()).pipe(tar.x({ C: __dirname }).on("finish", () => {
       fs.readdir(bindir, (err, names) => {
         if (err) throw err;
