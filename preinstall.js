@@ -59,8 +59,15 @@ const readVersion = name =>
 
 const dhallVersion = readVersion("dhall");
 const dhallJsonVersion = readVersion("dhall-json");
-if (semver.valid(dhallJsonVersion) && semver.lt(dhallJsonVersion, "1.2.8")) {
+
+const isLowerThan = (version, upperBound) =>
+  semver.valid(version) && semver.lt(version, upperBound);
+
+if (isLowerThan(dhallJsonVersion, "1.2.8")) {
   throw new Error(`This release of the \`${pkg.name}\` npm package installs \`json-to-dhall\`, which isn’t provided by \`dhall-json@<1.2.8\`.`);
+}
+if (isLowerThan(dhallJsonVersion, "1.3.0")) {
+  throw new Error(`This release of the \`${pkg.name}\` npm package installs \`yaml-to-dhall\`, which isn’t provided by \`dhall-json@<1.3.0\`.`);
 }
 
 const release = `https://github.com/dhall-lang/dhall-haskell/releases/download/${dhallVersion}/dhall-json-${dhallJsonVersion}`;
