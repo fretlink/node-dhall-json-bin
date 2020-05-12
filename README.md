@@ -1,5 +1,5 @@
 # node-dhall-json-bin
-NPM package for `dhall-json`, based on https://github.com/justinwoo/npm-psc-package-bin-simple. Linux and Windows only.
+NPM package for `dhall-json`, based on https://github.com/justinwoo/npm-psc-package-bin-simple.
 
 ## Installation
 
