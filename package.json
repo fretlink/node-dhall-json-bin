@@ -1,6 +1,8 @@
 {
   "name": "dhall-json",
   "version": "3.0.0",
+  "dhall-version": "1.29.0",
+  "dhall-json-version": "1.6.1",
   "description": "NPM package for `dhall-json`, based on https://github.com/justinwoo/npm-psc-package-bin-simple.",
   "os": [
     "darwin",
